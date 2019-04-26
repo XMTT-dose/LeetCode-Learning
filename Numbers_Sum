@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+'''
+LeetCode：n数之和
+'''
+def twoSum1(nums:[int], target: int): #两数之和，暴力法，时间O(n^2），空间O(1)
+    result = []
+    nums_1 = nums.copy()
+    i = 0
+    while len(nums) > 0:
+        pop = nums.pop(0)
+        jj = nums_1[i]
+        nums_1[i] = 'x'
+        if target - pop in nums_1:
+            nub = nums_1.index(target - pop)
+            if i != nub:
+                result.append(i)
+                result.append(nub)
+                break
+        nums_1[i] = jj
+        i += 1
+    return result
+
+def twoSum2( nums:[int], target: int) :#两数之和，一遍hash表，时间O(n),空间O(n)
+    hash={}
+    for i in range(len(nums)):
+        rest=target-nums[i]
+        if nums[i] in hash:
+            return hash[nums[i]],i
+        else:
+            hash[rest]=i
+
+def twoSum3( nums:[int], target: int):#两数之和，两边hash表，时间O(n),空间O(n)
+    pass
+
+def threeSum(nums:[int],target: int):#三数之和
+    result = []
+    nums.sort()
+    for i in range(len(nums)-2):
+        if i == 0 or nums[i] > nums[i-1]:
+            left = i+1
+            right = len(nums)-1
+            while left < right:
+                ident = nums[left] + nums[right] + nums[i]
+                if ident == target: 
+                    result.append([nums[i], nums[left], nums[right]])
+                    left += 1; right -= 1
+                    while left < right and nums[left] == nums[left-1]:  
+                        left += 1
+                    while left < right and nums[right] == nums[right+1]:
+                        right -= 1
+                elif ident < target:
+                    left += 1
+                else:
+                    right -= 1
+    return result
+
+def fourSum(nums: [int],target: int):
+    res, dicti = set(), {}
+    nums.sort()
+    for i in range(len(nums)):
+        for j in range(i+1, len(nums)):
+            key = nums[i] + nums[j]
+            if key not in dicti.keys():
+                dicti[key] = [(i,j)]
+            else:
+                dicti[key].append((i,j))
+    for i in range(len(nums)):
+        for j in range(i+1, len(nums)-2):
+            exp = target - nums[i] -nums[j]
+            if exp in dicti.keys():
+                for tmpIndex in dicti[exp]:
+                    if tmpIndex[0] > j:
+                        res.add((nums[i], nums[j], nums[tmpIndex[0]], nums[tmpIndex[1]]))
+    return [list(i) for i in res]
+
+if __name__ == "__main__":
+    nums=[13,2,7,11]
+    target=9
+    print(twoSum1(nums,target))       
+            
